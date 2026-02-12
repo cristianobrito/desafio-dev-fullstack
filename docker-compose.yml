@@ -1,0 +1,37 @@
+
+services:
+
+  mysql:
+    image: mysql:8
+    container_name: newsun_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: newsunBd
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  backend:
+    build: ./backend
+    container_name: newsun_backend
+    volumes:
+      - ./backend:/app
+    ports:
+      - "3001:3001"
+    depends_on:
+      - mysql
+
+  frontend:
+    image: node:18-alpine
+    container_name: newsun_frontend
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "3000:3000"
+    command: sh -c "echo Frontend ainda não iniciado"
+
+volumes:
+  mysql_data:
