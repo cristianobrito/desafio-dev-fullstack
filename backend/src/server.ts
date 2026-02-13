@@ -68,19 +68,92 @@ app.post("/simulacoes", async (req, res) => {
   }
 });
 
+
+// get geral com filtros
 app.get("/simulacoes", async (req, res) => {
-  const leads = await prisma.lead.findMany({
-    include: {
-      unidades: {
-        include: {
-          historicoDeConsumoEmKWH: true,
+  try {
+    const { nomeCompleto, email, codigoDaUnidadeConsumidora } = req.query;
+
+    const leads = await prisma.lead.findMany({
+      where: {
+        AND: [
+          nomeCompleto
+            ? {
+                nomeCompleto: {
+                  contains: String(nomeCompleto),
+                },
+              }
+            : {},
+          email
+            ? {
+                email: {
+                  contains: String(email),
+                },
+              }
+            : {},
+          codigoDaUnidadeConsumidora
+            ? {
+                unidades: {
+                  some: {
+                    codigoDaUnidadeConsumidora: String(
+                      codigoDaUnidadeConsumidora
+                    ),
+                  },
+                },
+              }
+            : {},
+        ],
+      },
+      include: {
+        unidades: {
+          include: {
+            historicoDeConsumoEmKWH: true,
+          },
         },
       },
-    },
-  });
+    });
 
-  return res.json(leads);
+    return res.json(leads);
+  } catch (error) {
+    console.error(error);
+    return res.status(400).json({
+      error: "Erro ao listar simulações",
+    });
+  }
 });
+
+
+
+app.get("/simulacoes/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const lead = await prisma.lead.findUnique({
+      where: { id },
+      include: {
+        unidades: {
+          include: {
+            historicoDeConsumoEmKWH: true,
+          },
+        },
+      },
+    });
+
+    if (!lead) {
+      return res.status(404).json({
+        error: "Simulação não encontrada",
+      });
+    }
+
+    return res.json(lead);
+  } catch (error) {
+    console.error(error);
+    return res.status(400).json({
+      error: "Erro ao buscar simulação",
+    });
+  }
+});
+
 
 app.listen(3001, () => {
   console.log("Servidor rodando na porta 3001");
