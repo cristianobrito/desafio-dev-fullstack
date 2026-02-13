@@ -24,7 +24,7 @@ services:
       - mysql
 
   frontend:
-    image: node:18-alpine
+    image: node:20-alpine
     container_name: newsun_frontend
     working_dir: /app
     volumes:
