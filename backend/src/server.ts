@@ -16,7 +16,7 @@ app.post("/simulacoes", async (req, res) => {
   try {
     const { nomeCompleto, email, telefone, unidades } = req.body;
 
-    // 🔎 Regras básicas
+    // Regras básicas
     if (!nomeCompleto || !email || !telefone) {
       return res.status(400).json({ error: "Dados do lead incompletos" });
     }

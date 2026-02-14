@@ -56,7 +56,7 @@ export default function SimularPage() {
 
         const decoded = await response.json();
 
-        // 🔥 Garantindo exatamente 12 meses
+        // Garantindo exatamente 12 meses
         const historico = decoded.invoice
           ?.slice(0, 12)
           .map((item: any) => ({
@@ -78,7 +78,7 @@ export default function SimularPage() {
         });
       }
 
-      // 🔥 Enviar para backend
+      // Enviar para backend
       const backendResponse = await fetch(
         "http://localhost:3001/simulacoes",
         {
