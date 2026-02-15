@@ -4,14 +4,31 @@ import { SimulacaoService } from "../services/simulacao.service"
 const simulacaoService = new SimulacaoService()
 
 export class SimulacaoController {
-  async criar(req: Request, res: Response) {
-    try {
-      const result = await simulacaoService.criarSimulacao(req.body)
-      return res.status(201).json(result)
-    } catch (error: any) {
-      return res.status(400).json({ error: error.message })
+async criar(req: Request, res: Response) {
+  try {
+    const files = req.files as Express.Multer.File[];
+
+    if (!files || files.length === 0) {
+      return res.status(400).json({
+        error: "Envie pelo menos uma conta de energia.",
+      });
     }
+
+    const { nomeCompleto, email, telefone } = req.body;
+
+    const result = await simulacaoService.criarComArquivos({
+      nomeCompleto,
+      email,
+      telefone,
+      files,
+    });
+
+    return res.status(201).json(result);
+  } catch (error: any) {
+    return res.status(400).json({ error: error.message });
   }
+}
+
 
   async listar(req: Request, res: Response) {
     try {

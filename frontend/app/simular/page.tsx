@@ -25,95 +25,60 @@ export default function SimularPage() {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!files || files.length === 0) {
-      setMessage("Envie pelo menos uma conta de energia.");
-      return;
+  if (!files || files.length === 0) {
+    setMessage("Envie pelo menos uma conta de energia.");
+    return;
+  }
+
+  try {
+    setLoading(true);
+    setMessage("");
+
+    const formData = new FormData();
+
+    formData.append("nomeCompleto", form.nomeCompleto);
+    formData.append("email", form.email);
+    formData.append("telefone", form.telefone);
+
+    for (let i = 0; i < files.length; i++) {
+      formData.append("files", files[i]); // IMPORTANTÍSSIMO
     }
 
-    try {
-      setLoading(true);
-      setMessage("");
-
-      const unidades: any[] = [];
-
-      for (let i = 0; i < files.length; i++) {
-        const formData = new FormData();
-        formData.append("file", files[i]);
-
-        const response = await fetch(
-          "https://magic-pdf.solarium.newsun.energy/v1/magic-pdf",
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error("Erro ao processar PDF");
-        }
-
-        const decoded = await response.json();
-
-        // Garantindo exatamente 12 meses
-        const historico = decoded.invoice
-          ?.slice(0, 12)
-          .map((item: any) => ({
-            consumoForaPontaEmKWH: item.consumo_fp,
-            mesDoConsumo: item.consumo_date,
-          })) || [];
-
-        if (historico.length !== 12) {
-          throw new Error(
-            "O PDF precisa conter exatamente 12 meses de consumo."
-          );
-        }
-
-        unidades.push({
-          codigoDaUnidadeConsumidora: decoded.unit_key,
-          modeloFasico: decoded.phaseModel,
-          enquadramento: decoded.chargingModel,
-          historicoDeConsumoEmKWH: historico,
-        });
+    const response = await fetch(
+      "http://localhost:3001/simulacoes",
+      {
+        method: "POST",
+        body: formData,
       }
+    );
 
-      // Enviar para backend
-      const backendResponse = await fetch(
-        "http://localhost:3001/simulacoes",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            ...form,
-            unidades,
-          }),
-        }
-      );
+    // vamos debuggar
 
-      if (!backendResponse.ok) {
-        const errorData = await backendResponse.json();
-        throw new Error(errorData.error || "Erro ao salvar simulação.");
-      }
+    if (!response.ok) {
+  const errorData = await response.json();
+  console.log("Erro completo backend:", errorData);
+  alert(JSON.stringify(errorData));
+  return;
+}
 
-      setMessage("Simulação registrada com sucesso!");
+    setMessage("Simulação registrada com sucesso!");
 
-      // Limpa formulário
-      setForm({
-        nomeCompleto: "",
-        email: "",
-        telefone: "",
-      });
+    setForm({
+      nomeCompleto: "",
+      email: "",
+      telefone: "",
+    });
 
-    } catch (error: any) {
-      console.error(error);
-      setMessage(error.message || "Erro ao registrar simulação.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  } catch (error: any) {
+    console.error(error);
+    setMessage(error.message || "Erro ao registrar simulação.");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <main className="max-w-2xl mx-auto p-8">

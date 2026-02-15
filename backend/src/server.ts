@@ -1,7 +1,12 @@
 import express from "express"
+import cors from "cors"
 import simulacaoRoutes from "./routes/simulacao.routes"
 
 const app = express()
+
+app.use(cors({
+  origin: "http://localhost:3000"
+}))
 
 app.use(express.json())
 

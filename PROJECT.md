@@ -1,14 +1,25 @@
-PROJECT.md
-    Desafio Full Stack – NewSun Energy
+🚀 Desafio Técnico – Plataforma de Simulação de Faturas de Energia
 
-Este projeto foi desenvolvido como parte do processo seletivo para desenvolvedor Full Stack da NewSun Energy.
+📌 Visão Geral
 
-    Tecnologias Utilizadas
-Backend
+Aplicação fullstack desenvolvida para processar faturas de energia elétrica em PDF, extrair informações estruturadas via API externa e persistir os dados normalizados em banco relacional.
+
+O sistema permite:
+
+Upload de faturas
+
+Processamento e validação dos dados decodificados
+
+Persistência estruturada
+
+Consulta com filtros dinâmicos
+
+Recuperação detalhada por ID
+
+🏗 Arquitetura
+🔹 Backend
 
 Node.js
-
-Typescript
 
 Express
 
@@ -16,171 +27,217 @@ Prisma ORM
 
 MySQL
 
-Docker
+Multer (upload)
 
-Frontend
+Axios (integração externa)
 
-Next.js (React)
+Estrutura em Camadas
+controllers/
+services/
+routes/
+prisma/
 
-Typescript
 
-TailwindCSS
+Separação clara de responsabilidades:
 
-  Arquitetura
+Route → definição de endpoints
 
-A aplicação foi dividida em:
+Controller → controle HTTP e status codes
 
-Frontend responsável pela interface e submissão dos dados.
+Service → regras de negócio e integração externa
 
-Backend responsável por validação, persistência e consulta dos dados.
+Prisma → persistência e modelagem
 
-Banco de dados MySQL para armazenamento das simulações.
+Essa abordagem mantém o domínio isolado da camada HTTP.
 
-A integração com a API externa de decodificação de contas (magic-pdf) foi realizada diretamente no frontend para simplificar o fluxo de submissão. Em um ambiente produtivo, essa integração poderia ser movida para o backend por questões arquiteturais e de segurança.
+🔹 Frontend
 
-  Fluxo da Aplicação
+Next.js (App Router)
 
-O usuário acessa /simular
+React
 
-Preenche:
+Fetch API
 
-Nome
+Gerenciamento de estado local com hooks
 
-Email
+Fluxo:
 
-Telefone
+Upload de PDF
 
-Uma ou mais contas de energia (PDF)
+Envio via FormData
 
-O frontend envia o arquivo para a API:
+Consumo do backend
+
+Renderização de listagem com filtros
+
+🗂 Modelagem de Dados
+
+A modelagem foi orientada ao domínio do problema.
+
+Lead
+
+Representa o cadastro principal do usuário.
+
+Campo	Tipo	Observação
+id	UUID	PK
+nomeCompleto	String	obrigatório
+email	String	UNIQUE
+telefone	String	obrigatório
+createdAt	DateTime	default now
+Unidade
+
+Representa a unidade consumidora da fatura.
+
+Campo	Tipo	Observação
+id	UUID	PK
+codigoDaUnidadeConsumidora	String	UNIQUE
+modeloFasico	String	
+enquadramento	String	
+leadId	FK	relação com Lead
+HistoricoDeConsumo
+
+Representa os 12 meses obrigatórios de histórico.
+
+Campo	Tipo
+id	UUID
+consumoForaPontaEmKWH	Int
+mesDoConsumo	DateTime
+unidadeId	FK
+🔐 Regras de Negócio Implementadas
+
+✔ Um lead deve possuir pelo menos 1 unidade
+✔ Cada unidade deve conter exatamente 12 meses de histórico
+✔ Email deve ser único
+✔ Código da unidade deve ser único
+✔ Validações realizadas antes da persistência
+✔ Tratamento explícito de erros
+
+Erros retornam:
+
+400 → erro de validação
+
+404 → recurso não encontrado
+
+🔌 Integração Externa
+
+A aplicação envia o PDF para a API externa:
 
 https://magic-pdf.solarium.newsun.energy/v1/magic-pdf
 
 
-A API retorna os dados decodificados.
+O fluxo é:
 
-O frontend valida se existem exatamente 12 meses de consumo.
+Recebimento do arquivo via Multer
 
-Os dados estruturados são enviados para o backend.
+Envio via Axios + FormData
 
-O backend aplica validações de negócio e persiste no banco.
+Extração de:
 
-  Modelagem de Domínio
-Lead
+invoice (histórico)
 
-id
+unit_key
 
-nomeCompleto
+phaseModel
 
-email (único)
+chargingModel
 
-telefone
+Validação dos 12 meses
 
-unidades
+Persistência estruturada
 
-Unidade
+A persistência não armazena o JSON bruto, mas apenas os dados relevantes ao domínio.
 
-id
-
-codigoDaUnidadeConsumidora (único)
-
-modeloFasico
-
-enquadramento
-
-historicoDeConsumoEmKWH
-
-Consumo
-
-consumoForaPontaEmKWH
-
-mesDoConsumo
-
-Relacionamentos:
-
-Lead 1:N Unidade
-
-Unidade 1:N Consumo
-
-  Regras de Negócio Implementadas
-
-✔ O email deve ser único por lead
-✔ O código da unidade consumidora deve ser único
-✔ Um lead deve ter no mínimo 1 unidade
-✔ Cada unidade deve conter exatamente 12 meses de consumo
-
-Observação:
-Devido à regra de unicidade do codigoDaUnidadeConsumidora, não é possível registrar duas simulações com a mesma unidade. Caso fosse necessário permitir múltiplos leads utilizando a mesma unidade, a modelagem poderia evoluir para um relacionamento N:N com tabela intermediária.
-
-  Endpoints
+📡 Endpoints
 POST /simulacoes
 
-Cria uma nova simulação.
+Cria um novo lead com unidades e histórico.
+
+Regras aplicadas:
+
+Validação de unicidade
+
+Validação de quantidade de meses
 
 GET /simulacoes
 
-Lista todas as simulações com opção de filtro por:
+Permite filtros opcionais:
 
-nomeCompleto
+nomeCompleto (contains)
 
-email
+email (contains)
 
-codigoDaUnidadeConsumidora
+codigoDaUnidadeConsumidora (some relation)
 
 GET /simulacoes/:id
 
-Retorna uma simulação específica pelo id.
+Retorna estrutura completa com:
 
-  Frontend
-/simular
+Lead
 
-Formulário para envio de nova simulação.
+Unidades
 
-/listagem
+Histórico
 
-Tela para consulta das simulações registradas.
+⚙ Estratégia de Integridade
 
-  Executando com Docker
+Integridade garantida em dois níveis:
 
-Clonar o repositório:
+1️⃣ Banco de dados (constraints @unique)
+2️⃣ Service (validação explícita antes da criação)
 
-git clone <repo>
+Essa abordagem evita inconsistência e falhas silenciosas.
 
+📈 Possíveis Evoluções
 
-Subir os containers:
+Implementação de transações explícitas (Prisma transaction)
 
+Paginação na listagem
+
+Testes automatizados (Jest)
+
+Logs estruturados
+
+Versionamento de API
+
+Armazenamento do PDF original em object storage
+
+Autenticação e autorização
+
+🐳 Execução
+Subir containers
 docker compose up -d
 
+Rodar migrations
+npx prisma migrate deploy
 
-Rodar backend:
-
-cd backend
-npm install
+Backend
 npm run dev
 
-
-Rodar frontend:
-
-cd frontend
-npm install
+Frontend
 npm run dev
 
+🧠 Decisões Técnicas
 
-Frontend disponível em:
+Optado por normalização completa do domínio
 
-http://localhost:3000
+Não armazenado JSON bruto da API externa
 
+Uso de includes para garantir retorno agregado
 
-Backend disponível em:
+Separação clara entre validação e persistência
 
-http://localhost:3001
+Filtros dinâmicos montados condicionalmente
 
-  Considerações Finais
+🏁 Conclusão
 
-  O projeto atende integralmente aos requisitos do desafio, incluindo integração real com a API de decodificação de contas, modelagem adequada de domínio, aplicação das regras de negócio e implementação completa do frontend e backend.
+Foi muito legal desenvolver este projeto! Ele ficou com uma estrutura bem organizada.
 
-+--------------------+
-|  author: Cristiano |
-+--------------------+
+Pensei em tudo pra ser:
 
-                                     newsun@2026
+📝 Fácil de entender - qualquer pessoa consegue se localizar no código
+
+🔧 Tranquilo de manter - sem dor de cabeça quando precisar ajustar algo
+
+🚀 Pronto pra crescer - se precisar adicionar mais funcionalidades, já está preparado
+
+Fico feliz com o resultado e espero que curta usar e evoluir o projeto! 😊
