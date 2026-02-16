@@ -78,37 +78,37 @@ Lead
 
 Representa o cadastro principal do usuário.
 
-Campo	Tipo	Observação
-id	UUID	PK
-nomeCompleto	String	obrigatório
-email	String	UNIQUE
-telefone	String	obrigatório
-createdAt	DateTime	default now
+Campo	        Tipo	        Observação
+id	            UUID	        PK
+nomeCompleto	String	        obrigatório
+email	        String	        UNIQUE
+telefone	    String	        obrigatório obs: **
+createdAt	    DateTime	    default now
 Unidade
 
 Representa a unidade consumidora da fatura.
 
-Campo	Tipo	Observação
-id	UUID	PK
-codigoDaUnidadeConsumidora	String	UNIQUE
-modeloFasico	String	
-enquadramento	String	
-leadId	FK	relação com Lead
+Campo	                    Tipo	Observação
+id	                        UUID	PK
+codigoDaUnidadeConsumidora	String	UNIQUE obs: **
+modeloFasico	            String	
+enquadramento	            String	
+leadId	                            FK	relação com Lead
 HistoricoDeConsumo
 
 Representa os 12 meses obrigatórios de histórico.
 
-Campo	Tipo
-id	UUID
+Campo	                Tipo
+id	                    UUID
 consumoForaPontaEmKWH	Int
-mesDoConsumo	DateTime
-unidadeId	FK
+mesDoConsumo	        DateTime
+unidadeId	            FK
 🔐 Regras de Negócio Implementadas
 
-✔ Um lead deve possuir pelo menos 1 unidade
+✔ Um lead deve possuir pelo menos 1 unidade  obs: **
 ✔ Cada unidade deve conter exatamente 12 meses de histórico
 ✔ Email deve ser único
-✔ Código da unidade deve ser único
+✔ Código da unidade deve ser único           obs: **
 ✔ Validações realizadas antes da persistência
 ✔ Tratamento explícito de erros
 
