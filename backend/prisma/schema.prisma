@@ -24,7 +24,7 @@ model Lead {
 
 model Unidade {
   id                            String    @id @default(uuid())
-  codigoDaUnidadeConsumidora    String    @unique
+  codigoDaUnidadeConsumidora    String    
   modeloFasico                  String
   enquadramento                 String
   leadId                        String

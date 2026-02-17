@@ -78,19 +78,20 @@ async criarSimulacao(data: any) {
     }
 
     // verifica se já existe no banco
-    const unidadeExistente = await prisma.unidade.findUnique({
-      where: {
-        codigoDaUnidadeConsumidora: unidade.codigoDaUnidadeConsumidora,
-      },
-    })
+    // const unidadeExistente = await prisma.unidade.findUnique({
+    //   where: {
+    //     codigoDaUnidadeConsumidora: unidade.codigoDaUnidadeConsumidora,
+    //   },
+    // })
 
-    if (unidadeExistente) {
-      throw new Error(
-        `A unidade ${unidade.codigoDaUnidadeConsumidora} já está cadastrada no sistema.`
-      )
-    }
+    // if (unidadeExistente) {
+    //   throw new Error(
+    //     `A unidade ${unidade.codigoDaUnidadeConsumidora} já está cadastrada no sistema.`
+    //   )
+    // }
   }
 
+  console.log('passei line: 94 | arq: services/simulacao.service.ts | aceito duplicatas');
   // Se passou nas validações, cria o lead
   const lead = await prisma.lead.create({
     data: {

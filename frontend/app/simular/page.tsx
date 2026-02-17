@@ -8,7 +8,7 @@ export default function SimularPage() {
     email: "",
     telefone: "",
   });
-
+  
   const [files, setFiles] = useState<FileList | null>(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
@@ -46,6 +46,13 @@ export default function SimularPage() {
       formData.append("files", files[i]); // IMPORTANTÍSSIMO
     }
 
+  console.log("=================== [ DEBUGER ] ==============================");
+  console.log("formdata montada");
+  for(const[key, value] of formData.entries()){
+    console.log(key, value instanceof File ?  value.name : value);
+  }
+  // debugger;
+
     const response = await fetch(
       "http://localhost:3001/simulacoes",
       {
@@ -54,14 +61,16 @@ export default function SimularPage() {
       }
     );
 
-    // vamos debuggar
+  console.log('passei aqui: line: 66 arq: simular/page.tsx ');
+  console.log("=================== [ DEBUGER ] ==============================");
+    // debugger;
 
     if (!response.ok) {
-  const errorData = await response.json();
-  console.log("Erro completo backend:", errorData);
-  alert(JSON.stringify(errorData));
-  return;
-}
+      const errorData = await response.json();
+        console.log("Erro completo backend:", errorData);
+        alert(JSON.stringify(errorData));
+      return;
+    }
 
     setMessage("Simulação registrada com sucesso!");
 
@@ -92,6 +101,7 @@ export default function SimularPage() {
           type="text"
           name="nomeCompleto"
           placeholder="Nome completo"
+          autoComplete="given-name family-name"
           value={form.nomeCompleto}
           onChange={handleChange}
           className="w-full border p-2 rounded"
@@ -102,6 +112,7 @@ export default function SimularPage() {
           type="email"
           name="email"
           placeholder="Email"
+          autoComplete="email"
           value={form.email}
           onChange={handleChange}
           className="w-full border p-2 rounded"
@@ -109,9 +120,10 @@ export default function SimularPage() {
         />
 
         <input
-          type="text"
+          type="tel"
           name="telefone"
           placeholder="Telefone"
+          autoComplete="tel"
           value={form.telefone}
           onChange={handleChange}
           className="w-full border p-2 rounded"
