@@ -23,8 +23,10 @@ async criar(req: Request, res: Response) {
       files,
     });
 
+    console.log('controler line: 26 respondendo ');
     return res.status(201).json(result);
   } catch (error: any) {
+    console.log('[SERVICE DEBUGGUER] [CTRL LINE:29] resposta com error melhorar isso');
     return res.status(400).json({ error: error.message });
   }
 }
