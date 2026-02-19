@@ -23,10 +23,23 @@ async criar(req: Request, res: Response) {
       files,
     });
 
-    console.log('controler line: 26 respondendo ');
+    console.log('controler line: %-6d  respondendo', 26); // alinhamento estilo c
+    console.table({
+      controller_line: 30,
+      message: 'respondendo',
+      status: 201,
+      result: result, 
+    });
     return res.status(201).json(result);
   } catch (error: any) {
-    console.log('[SERVICE DEBUGGUER] [CTRL LINE:29] resposta com error melhorar isso');
+    console.log('[SERVICE DEBUGGUER] [CTRL LINE: %-6d] resposta com error', 35);
+    console.table({
+      service: 'DEBUG',
+      controller_line: 35,
+      message: 'resposta com error',
+      error: error?.message || error,
+      message2: 'nova forma de debug',
+    });
     return res.status(400).json({ error: error.message });
   }
 }

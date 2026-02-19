@@ -2,6 +2,8 @@ import axios from "axios"
 import FormData from "form-data"
 import { PrismaClient } from "@prisma/client"
 
+
+const LINE_WIDTH = 8;  // para linhas o code
 const prisma = new PrismaClient()
 
 export class SimulacaoService {
@@ -32,7 +34,7 @@ export class SimulacaoService {
 
     const decoded = response.data
 
-    console.log('resposta da API line:35 {decoder}', {decoded});
+    console.log('resposta da API line: %-${LINE_WIDTH}d {decoder}', {decoded}, 37);
     const historico =
       decoded.invoice?.slice(0, 12).map((item: any) => ({
         consumoForaPontaEmKWH: item.consumo_fp,
@@ -53,7 +55,7 @@ export class SimulacaoService {
     })
   }
 
-  console.log('[SERVICE DEBUG]passei pelos dados line:56 antes de criarSimulacao');
+  console.log('[SERVICE DEBUG]passei pelos dados line: %-${LINE_WIDTH}d antes de criarSimulacao', 58);
   // const dados = this.criarSimulacao({ nomeCompleto, email, telefone, unidades });
   console.log('[SERVICE DEBUG]passei pelos dados line:58 removi uma chamada');
   return this.criarSimulacao({
@@ -76,7 +78,7 @@ async criarSimulacao(data: any) {
     throw new Error("Um lead deve ter no mínimo 1 unidade.")
   }
 
-  console.log('[SERVICE DEBUG] Entrando no for... da line: 80');
+  console.log('[SERVICE DEBUG] Entrando no for... da line: %-${LINE_WIDTH}d', 81);
   // Validações + verificação de unidade duplicada
   for (const unidade of unidades) {
     console.log('[SERVICE DEBUG] Processando unidade:', unidade.codigoDaUnidadeConsumidora);
@@ -88,7 +90,7 @@ async criarSimulacao(data: any) {
       )
     }
 
-  console.log('[SERVICE DEBUG] passei aqui: line: 90 verificar se existe a unidade no banco');
+  console.log('[SERVICE DEBUG] passei aqui: line: %-${LINE_WIDTH}d verificar se existe a unidade no banco', 93);
    // verifica se já existe no banco
     const unidadeExistente = await prisma.unidade.findUnique({
       where: {
@@ -96,15 +98,15 @@ async criarSimulacao(data: any) {
       },
     })
 
-    console.log('[SERVICE DEBUG] [line: 98] ver se esta passando pelo if condicional');
+    console.log('[SERVICE DEBUG] line: %-${LINE_WIDTH}d  ver se esta passando pelo if condicional', 101);
     if (unidadeExistente) {
-      console.log('[SERVICE DEBUG] [line: 100] unidade cadastrada');
+      console.log('[SERVICE DEBUG] line: %-${LINE_WIDTH}d unidade cadastrada', 103);
       throw new Error(
         `A unidade ${unidade.codigoDaUnidadeConsumidora} já está cadastrada no sistema.`
       )
     }
   }
-  console.log('[SERVICE DEBUG] line: 106 aceito duplicatas');
+  console.log('[SERVICE DEBUG] line: %-${LINE_WIDTH}d aceito duplicatas', 109);
 
   // Se passou nas validações, cria o lead
   const lead = await prisma.lead.create({
