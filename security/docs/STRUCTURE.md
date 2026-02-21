@@ -1,0 +1,3 @@
+/docs
+  CHANGELOG.md
+  STRUCTURE.md
