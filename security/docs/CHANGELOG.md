@@ -75,3 +75,19 @@
 - derrubei o front e o backend e voltei a subir cada um deles
 - fui na url: http://localhost:3000/grafico e tudo rodou normalmente o componete foi exibido
 
+## [2026-02-21 11:12]
+- instalei o axios na pasta do frontend para resolver o erro
+  o erro do axios ocorreu porque tive que ligar o front ao back para pegar os dados para usar no grafico
+    npm install axios
+- depois de instalar o axios derrubar e subir de novo o front e o backend
+- conferir no package.json do frontend se o axios foi instalado e estava la
+- tudo rodou normalmente exceto por uma warning na chamada await
+
+## [2026-02-21 11:35]
+- modifiquei o code do arquivo Contas-Energia-Chart.tsx
+- testei tudo e funcionou grafico exibido sem erros e atualizando em tempo real
+
+## [2026-02-21 12:08]
+- modifiquei de novo o arquivo globals.css, Contas-Energia-Chart.tsx
+- depois de derrubar e subir o front e o back tudo esta funcionando corretamente
+
