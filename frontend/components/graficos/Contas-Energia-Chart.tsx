@@ -313,7 +313,7 @@ export default function ContasEnergiaChart() {
       </div>
 
       {/* Tabela de detalhes */}
-      <div className="bg-white p-4 rounded-lg shadow">
+      <div className="bg-gray-950/80 p-6 rounded-xl shadow-2xl shadow-purple-500/30 backdrop-blur-sm border border-purple-500/20">
         <h2 className="text-xl font-semibold mb-4">Detalhamento das Simulações</h2>
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">

@@ -91,3 +91,8 @@
 - modifiquei de novo o arquivo globals.css, Contas-Energia-Chart.tsx
 - depois de derrubar e subir o front e o back tudo esta funcionando corretamente
 
+****************************************************************************************
+
+## [2026-02-22 08:13]
+- mudei o fundo do template do grafico do arquivo Contas-Energia-Chart.tsx
+-
