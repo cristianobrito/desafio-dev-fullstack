@@ -57,7 +57,7 @@ export default function Domingo({ data }: { data: any[] }) {
 
             <header className="mb-8">
                 <h2 className="text-2xl font-bold tracking-tighter text-gray-400 uppercase italic">
-                    <span className="text-cyan-400"></span> Painel de Monitoramento Domingo
+                    <span className="text-cyan-400"></span> Painel de Monitoramento de Contas de Energia Solar
                 </h2>
             </header>
 

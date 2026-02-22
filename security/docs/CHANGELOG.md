@@ -102,4 +102,8 @@
 ## [2026-02-22 11:09]
 - terminei o novo grafico mais personalizado do meu jeito
 - estou comitei na branch teste/domingo-v1
-- 
+- https://app.diagrams.net/ 
+- https://excalidraw.com/ 
+- sites que ajudam com organização
+
+
