@@ -95,4 +95,11 @@
 
 ## [2026-02-22 08:13]
 - mudei o fundo do template do grafico do arquivo Contas-Energia-Chart.tsx
--
+
+## [2026-02-22 08:53]
+- criei meu componente e exibi na tela tudo ok!
+
+## [2026-02-22 11:09]
+- terminei o novo grafico mais personalizado do meu jeito
+- estou comitei na branch teste/domingo-v1
+- 
